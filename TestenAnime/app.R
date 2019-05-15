@@ -1,4 +1,7 @@
 library(shiny)
+library(ggplot2)
+library(dplyr)
+library(tools)
 tidy_anime <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-04-23/tidy_anime.csv")
 
 ui <- fluidPage(
