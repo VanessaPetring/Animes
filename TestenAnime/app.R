@@ -14,22 +14,35 @@ ui <- fluidPage(
         sidebarPanel(
             selectInput("y",
                         "Y-axis",
-                        choices = c("Score" = "score", "Rank"="rank", "Popularity" = "popularity"),
+                        choices = c("Score" = "score",
+                                    "Rank"="rank", 
+                                    "Popularity" = "popularity"),
                         selected = "score"),
             selectInput("x",
                         "x-axis",
-                        choices = c("Score" = "score", "Rank"="rank", "Popularity" = "popularity"),
+                        choices = c("Score" = "score", 
+                                    "Rank"="rank", 
+                                    "Popularity" = "popularity"),
                         selected = "popularity"),
             checkboxGroupInput(inputId = "selected_type",
                                label = "Select genres:",
                                choices = c("Action", "Adventure", "comedy", "Drama"),
-                               selected = "Action")
+                               selected = "Action"),
+            
+            textInput(inputId = "plot_title", 
+                      label = "Plot title", 
+                      placeholder = "Enter text for plot title")
+            
         ),
-
+        
+        
+        
         # Show a plot of the generated distribution
         mainPanel(
            plotOutput(outputId = "scatterplot")
         )
+        
+     
     )
 )
 
@@ -41,14 +54,14 @@ server <- function(input, output) {
         filter(tidy_anime, genre %in% input$selected_type)
     })
     
-    pretty_plot_title <- toTitleCase(input$plot_title)
+    pretty_plot_title <- reactive({ toTitleCase(input$plot_title) })
     
 # Scatterplot erstellen
     output$scatterplot <- renderPlot({
-        ggplot(data = animes_subset, 
+        ggplot(data = animes_subset(), 
                aes_string(x = input$x, y = input$y)) +
             geom_point() +
-            labs(title = pretty_plot_title)
+            labs(title = pretty_plot_title())
     })
     
 }
